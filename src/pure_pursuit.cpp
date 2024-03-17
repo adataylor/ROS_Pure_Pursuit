@@ -74,7 +74,7 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.1), v_(v_max_), 
   // Get parameters from the parameter server
   nh_private_.getParam("wheelbase", wheel_base_);
   nh_private_.getParam("lookahead_distance", lookahead_distance_);
-  nh_private_.getParam("linear_velocity", v_, 0.1);
+  nh_private_.getParam("linear_velocity", v_max_);
   nh_private_.getParam("max_rotational_velocity", w_max_);
   nh_private_.getParam("position_tolerance", position_tolerance_);
   nh_private_.getParam("steering_angle_velocity", delta_vel_);
