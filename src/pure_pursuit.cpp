@@ -110,6 +110,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
 {
   if (path_loaded_)
   {
+    ROS_INFO("Started path");
     // Get the current pose
     geometry_msgs::TransformStamped tf;
     try
@@ -141,7 +142,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         {
           goal_reached_ = true;
           path_ = nav_msgs::Path(); // Reset the path
-          ROS_LOG("Completed path");
+          ROS_INFO("Completed path");
         }
         // Not meet the position tolerance: extend the lookahead distance beyond the goal
         else
