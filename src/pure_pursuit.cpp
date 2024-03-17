@@ -256,7 +256,7 @@ void PurePursuit::waypoints_listener(nav_msgs::Path new_path)
     idx_ = 0;
     if (new_path.poses.size() > 0)
     {
-      std::cout << "Received Waypoints" << std::endl;
+      // std::cout << "Received Waypoints" << std::endl;
       path_loaded_ = true;
     }
     else
