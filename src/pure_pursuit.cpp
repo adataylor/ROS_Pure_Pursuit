@@ -250,6 +250,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
 
 void PurePursuit::waypoints_listener(nav_msgs::Path new_path)
 { 
+  std::cout << "Ping" << std::endl;
   if (new_path.header.frame_id == map_frame_id_)
   {
     path_ = new_path;
