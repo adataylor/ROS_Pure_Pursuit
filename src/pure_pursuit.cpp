@@ -74,7 +74,7 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.1), v_(v_max_), 
   // Get parameters from the parameter server
   nh_private_.getParam("wheelbase", wheel_base_);
   nh_private_.getParam("lookahead_distance", lookahead_distance_);
-  nh_private_.getParam("linear_velocity", v_max_);
+  nh_private_.getParam("linear_velocity", v_, 0.1);
   nh_private_.getParam("max_rotational_velocity", w_max_);
   nh_private_.getParam("position_tolerance", position_tolerance_);
   nh_private_.getParam("steering_angle_velocity", delta_vel_);
@@ -141,7 +141,6 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         {
           goal_reached_ = true;
           path_ = nav_msgs::Path(); // Reset the path
-          ROS_INFO("Completed path");
         }
         // Not meet the position tolerance: extend the lookahead distance beyond the goal
         else
@@ -250,14 +249,13 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
 
 void PurePursuit::waypoints_listener(nav_msgs::Path new_path)
 { 
-  // std::cout << "Ping" << std::endl;
   if (new_path.header.frame_id == map_frame_id_)
   {
     path_ = new_path;
     idx_ = 0;
     if (new_path.poses.size() > 0)
     {
-      // std::cout << "Received Waypoints" << std::endl;
+      std::cout << "Received Waypoints" << std::endl;
       path_loaded_ = true;
     }
     else
