@@ -139,6 +139,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         // Reach the goal
         if (fabs(goal_offset.p.x()) <= position_tolerance_)
         {
+          ROS_INFO("Reached goal, resetting path");
           goal_reached_ = true;
           path_ = nav_msgs::Path(); // Reset the path
         }
