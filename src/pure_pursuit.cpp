@@ -97,7 +97,7 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.1), v_(v_max_), 
   idx_memory = 0;
   path_loaded_ = false;
   
-  sub_path_ = nh_.subscribe("/waypoints", 1, &PurePursuit::waypoints_listener, this);
+  sub_path_ = nh_.subscribe("/waypoints_pp", 1, &PurePursuit::waypoints_listener, this);
   sub_odom_ = nh_.subscribe("/odom", 1, &PurePursuit::cmd_generator, this);
 
   pub_vel_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
