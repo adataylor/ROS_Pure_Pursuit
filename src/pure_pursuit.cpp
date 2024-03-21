@@ -206,7 +206,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         run_status = 0;
       }
       // Reach the goal: stop the vehicle
-      else
+      elif (run_status == 1)
       {
         ROS_INFO("Reached the goal; stopping");
         cmd_vel_.linear.x = 0.00;
