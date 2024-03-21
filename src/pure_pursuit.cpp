@@ -170,6 +170,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
       // Waypoint follower
       if (!goal_reached_)
       {
+        ROS_INFO('Goal not reached!');
         v_ = copysign(v_max_, v_);
         
         double lateral_offset = lookahead_.transform.translation.y;
@@ -186,6 +187,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
       // Reach the goal: stop the vehicle
       else
       {
+        ROS_INFO("Reached the goal; stopping");
         cmd_vel_.linear.x = 0.00;
         cmd_vel_.angular.z = 0.00;
 
