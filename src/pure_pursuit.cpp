@@ -22,6 +22,9 @@
 using std::string;
 
 int run_status = 0;
+// 1  = Running our path
+// -1 = Stop, and relax
+// 0  = Neutral, nothing being filed good or bad
 
 class PurePursuit
 {
@@ -187,7 +190,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         cmd_acker_.drive.speed = v_;
         cmd_acker_.header.stamp = ros::Time::now();
       } else if (run_status == -1) {
-        ROS_INFO("Halting");
+        ROS_INFO("Halting due to request from client code");
         cmd_vel_.linear.x = 0.00;
         cmd_vel_.angular.z = 0.00;
 
@@ -199,6 +202,8 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         pub_vel_.publish(cmd_vel_);
         // Publish the ackerman_steering command
         pub_acker_.publish(cmd_acker_);
+
+        run_status = 0
       }
       // Reach the goal: stop the vehicle
       else
