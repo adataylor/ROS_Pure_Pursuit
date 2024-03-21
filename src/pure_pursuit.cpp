@@ -203,7 +203,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         // Publish the ackerman_steering command
         pub_acker_.publish(cmd_acker_);
 
-        run_status = 0
+        run_status = 0;
       }
       // Reach the goal: stop the vehicle
       else
