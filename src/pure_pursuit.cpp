@@ -170,7 +170,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
       // Waypoint follower
       if (!goal_reached_)
       {
-        ROS_INFO('Goal not reached!');
+        ROS_INFO("Goal not reached!");
         v_ = copysign(v_max_, v_);
         
         double lateral_offset = lookahead_.transform.translation.y;
