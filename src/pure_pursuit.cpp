@@ -220,6 +220,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         pub_vel_.publish(cmd_vel_);
         // Publish the ackerman_steering command
         pub_acker_.publish(cmd_acker_);
+        run_status = 0;
       }
 
       // It won't run this in the halt status from reaching the goal
@@ -293,7 +294,7 @@ void PurePursuit::waypoints_listener(nav_msgs::Path new_path)
     }
     else
     {
-      ROS_WARN_STREAM("Received empty waypoint!");
+      // ROS_WARN_STREAM("Received empty waypoint!");
       run_status = -1;
 
     }
