@@ -194,6 +194,11 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         cmd_acker_.header.stamp = ros::Time::now();
         cmd_acker_.drive.steering_angle = 0.00;
         cmd_acker_.drive.speed = 0.00;
+
+        // Publish the velocity command
+        pub_vel_.publish(cmd_vel_);
+        // Publish the ackerman_steering command
+        pub_acker_.publish(cmd_acker_);
       }
       // Reach the goal: stop the vehicle
       else
@@ -205,52 +210,60 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         cmd_acker_.header.stamp = ros::Time::now();
         cmd_acker_.drive.steering_angle = 0.00;
         cmd_acker_.drive.speed = 0.00;
+
+        // Publish the velocity command
+        pub_vel_.publish(cmd_vel_);
+        // Publish the ackerman_steering command
+        pub_acker_.publish(cmd_acker_);
       }
 
-      // Publish the lookahead target transform.
-      lookahead_.header.stamp = ros::Time::now();
-      tf_broadcaster_.sendTransform(lookahead_);
-      // Publish the velocity command
-      pub_vel_.publish(cmd_vel_);
-      // Publish the ackerman_steering command
-      pub_acker_.publish(cmd_acker_);
-      // Publish the lookahead_marker for visualization
-      lookahead_marker_.header.frame_id = "world";
-      lookahead_marker_.header.stamp = ros::Time::now();
-      lookahead_marker_.type = visualization_msgs::Marker::SPHERE;
-      lookahead_marker_.action = visualization_msgs::Marker::ADD;
-      lookahead_marker_.scale.x = 1;
-      lookahead_marker_.scale.y = 1;
-      lookahead_marker_.scale.z = 1;
-      lookahead_marker_.pose.orientation.x = 0.0;
-      lookahead_marker_.pose.orientation.y = 0.0;
-      lookahead_marker_.pose.orientation.z = 0.0;
-      lookahead_marker_.pose.orientation.w = 1.0;
-      lookahead_marker_.color.a = 1.0;
-      if (!goal_reached_)
-      {
-        lookahead_marker_.id = idx_;
-        lookahead_marker_.pose.position.x = path_.poses[idx_].pose.position.x;
-        lookahead_marker_.pose.position.y = path_.poses[idx_].pose.position.y;
-        lookahead_marker_.pose.position.z = path_.poses[idx_].pose.position.z;
-        lookahead_marker_.color.r = 0.0;
-        lookahead_marker_.color.g = 1.0;
-        lookahead_marker_.color.b = 0.0;
-        pub_marker_.publish(lookahead_marker_);
-      }
-      else
-      {
-        lookahead_marker_.id = idx_memory;
-        idx_memory += 1;
-        lookahead_marker_.pose.position.x = tf.transform.translation.x;
-        lookahead_marker_.pose.position.y = tf.transform.translation.y;
-        lookahead_marker_.pose.position.z = tf.transform.translation.z;
-        lookahead_marker_.color.r = 1.0;
-        lookahead_marker_.color.g = 0.0;
-        lookahead_marker_.color.b = 0.0;
-        if (idx_memory%5 == 0)
+      // It won't run this in the halt status from reaching the goal
+      if (run_status == 1) {
+        // Publish the lookahead target transform.
+        lookahead_.header.stamp = ros::Time::now();
+        tf_broadcaster_.sendTransform(lookahead_);
+        // Publish the velocity command
+        pub_vel_.publish(cmd_vel_);
+        // Publish the ackerman_steering command
+        pub_acker_.publish(cmd_acker_);
+        // Publish the lookahead_marker for visualization
+        lookahead_marker_.header.frame_id = "world";
+        lookahead_marker_.header.stamp = ros::Time::now();
+        lookahead_marker_.type = visualization_msgs::Marker::SPHERE;
+        lookahead_marker_.action = visualization_msgs::Marker::ADD;
+        lookahead_marker_.scale.x = 1;
+        lookahead_marker_.scale.y = 1;
+        lookahead_marker_.scale.z = 1;
+        lookahead_marker_.pose.orientation.x = 0.0;
+        lookahead_marker_.pose.orientation.y = 0.0;
+        lookahead_marker_.pose.orientation.z = 0.0;
+        lookahead_marker_.pose.orientation.w = 1.0;
+        lookahead_marker_.color.a = 1.0;
+        if (!goal_reached_)
         {
-          pub_marker_.publish(lookahead_marker_); 
+          lookahead_marker_.id = idx_;
+          lookahead_marker_.pose.position.x = path_.poses[idx_].pose.position.x;
+          lookahead_marker_.pose.position.y = path_.poses[idx_].pose.position.y;
+          lookahead_marker_.pose.position.z = path_.poses[idx_].pose.position.z;
+          lookahead_marker_.color.r = 0.0;
+          lookahead_marker_.color.g = 1.0;
+          lookahead_marker_.color.b = 0.0;
+          pub_marker_.publish(lookahead_marker_);
+        }
+        else
+        {
+          lookahead_marker_.id = idx_memory;
+          idx_memory += 1;
+          lookahead_marker_.pose.position.x = tf.transform.translation.x;
+          lookahead_marker_.pose.position.y = tf.transform.translation.y;
+          lookahead_marker_.pose.position.z = tf.transform.translation.z;
+          lookahead_marker_.color.r = 1.0;
+          lookahead_marker_.color.g = 0.0;
+          lookahead_marker_.color.b = 0.0;
+          if (idx_memory%5 == 0)
+          {
+            pub_marker_.publish(lookahead_marker_); 
+          }
         }
       }
     }
