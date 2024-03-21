@@ -21,6 +21,8 @@
 
 using std::string;
 
+int run_status = 0;
+
 class PurePursuit
 {
   public:
@@ -141,7 +143,8 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         {
           ROS_INFO("Reached goal, resetting path");
           goal_reached_ = true;
-          path_ = nav_msgs::Path(); // Reset the path
+          path_         = nav_msgs::Path(); // Reset the path
+          run_status    = 0;
         }
         // Not meet the position tolerance: extend the lookahead distance beyond the goal
         else
@@ -168,7 +171,7 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
       }
 
       // Waypoint follower
-      if (!goal_reached_)
+      if (!goal_reached_ && run_status == 1)
       {
         // ROS_INFO("Goal not reached!");
         v_ = copysign(v_max_, v_);
@@ -183,6 +186,14 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
         cmd_vel_.linear.x = v_;
         cmd_acker_.drive.speed = v_;
         cmd_acker_.header.stamp = ros::Time::now();
+      } else if (run_status == -1) {
+        ROS_INFO("Halting");
+        cmd_vel_.linear.x = 0.00;
+        cmd_vel_.angular.z = 0.00;
+
+        cmd_acker_.header.stamp = ros::Time::now();
+        cmd_acker_.drive.steering_angle = 0.00;
+        cmd_acker_.drive.speed = 0.00;
       }
       // Reach the goal: stop the vehicle
       else
@@ -260,10 +271,13 @@ void PurePursuit::waypoints_listener(nav_msgs::Path new_path)
     {
       std::cout << "Received Waypoints" << std::endl;
       path_loaded_ = true;
+      run_status = 1;
     }
     else
     {
       ROS_WARN_STREAM("Received empty waypoint!");
+      run_status = -1;
+
     }
   }
   else
