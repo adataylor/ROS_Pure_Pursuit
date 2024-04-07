@@ -113,6 +113,8 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.1), v_(v_max_), 
 
 void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
 {
+  // nh_private_.getParam("linear_velocity", v_);
+  
   if (path_loaded_)
   {
     // Get the current pose
