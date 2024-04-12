@@ -133,6 +133,16 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
           lookahead_.transform.translation.z = pose_offset.p.z();
           pose_offset.M.GetQuaternion(lookahead_.transform.rotation.x, lookahead_.transform.rotation.y,
                                       lookahead_.transform.rotation.z, lookahead_.transform.rotation.w);
+
+          if(std::isnan(lookahead_.transform.translation.x)){    
+            lookahead_.transform.translation.x = 0.01;
+            lookahead_.transform.translation.y = 0.01;
+            yt = 0.01;
+            ROS_INFO("Handling for weird NAN");
+          } 
+
+
+
           idx_memory = idx_;
           break;
         }
