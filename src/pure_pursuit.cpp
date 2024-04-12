@@ -182,6 +182,15 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
           lookahead_.transform.translation.z = goal_offset.p.z();
           goal_offset.M.GetQuaternion(lookahead_.transform.rotation.x, lookahead_.transform.rotation.y,
                                       lookahead_.transform.rotation.z, lookahead_.transform.rotation.w);
+
+
+          if(std::isnan(lookahead_.transform.translation.x)){    
+            lookahead_.transform.translation.x = 0.01;
+            lookahead_.transform.translation.y = 0.01;
+            // yt = 0.01;
+            ROS_INFO("Handling for weird NAN when driving past");
+          } 
+
         }
       }
 
@@ -239,6 +248,14 @@ void PurePursuit::cmd_generator(nav_msgs::Odometry odom)
       if (run_status == 1) {
         // Publish the lookahead target transform.
         lookahead_.header.stamp = ros::Time::now();
+
+        if(std::isnan(lookahead_.transform.translation.x)){    
+          lookahead_.transform.translation.x = 0.01;
+          lookahead_.transform.translation.y = 0.01;
+          // yt = 0.01;
+          ROS_INFO("Handling for weird NAN before broadcast");
+        } 
+        
         tf_broadcaster_.sendTransform(lookahead_);
         // Publish the velocity command
         pub_vel_.publish(cmd_vel_);
